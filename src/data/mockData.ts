@@ -4,7 +4,7 @@ export const mockMemes: Meme[] = [
     {
         id: '1',
         title: 'Fluffy Kitten',
-        imageUrl: 'https://placekitten.com/600/400',
+        imageUrl: 'https://images.unsplash.com/photo-1595433707802-6b2626ef1c91',
         description: 'An adorable fluffy kitten playing with a ball of yarn.',
         createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
         creator: 'catLover123',
@@ -28,7 +28,7 @@ export const mockMemes: Meme[] = [
     {
         id: '3',
         title: 'Baby Elephant',
-        imageUrl: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46',
+        imageUrl: 'https://images.unsplash.com/photo-1603483080228-04f2313d9f10',
         description: 'A baby elephant playing with water.',
         createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
         creator: 'wildlifeWatcher',
@@ -37,22 +37,11 @@ export const mockMemes: Meme[] = [
         cutePrice: 0.97,
         notCutePrice: 0.03,
     },
-    {
-        id: '4',
-        title: 'Sleepy Sloth',
-        imageUrl: 'https://images.unsplash.com/photo-1576502200916-f808dd1ad7d5',
-        description: 'A sleepy sloth hanging from a tree branch.',
-        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        creator: 'slothEnthusiast',
-        cuteVotes: 134,
-        notCuteVotes: 28,
-        cutePrice: 0.83,
-        notCutePrice: 0.17,
-    },
+
     {
         id: '5',
         title: 'Dancing Duck',
-        imageUrl: 'https://images.unsplash.com/photo-1560713781-d4ef87569c8d',
+        imageUrl: 'https://images.unsplash.com/photo-1555852095-64e7428df0fa',
         description: 'A duck that appears to be dancing on water.',
         createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
         creator: 'duckLover',
