@@ -17,7 +17,7 @@ interface PortfolioItem {
 }
 
 export default function PortfolioPage() {
-    const [user, setUser] = useState(mockUser);
+    const [user] = useState(mockUser);
     const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
     const [totalValue, setTotalValue] = useState(0);
 
@@ -92,7 +92,7 @@ export default function PortfolioPage() {
 
                     {portfolio.length === 0 ? (
                         <div className="p-6 text-center">
-                            <p className="text-gray-500 dark:text-gray-400 mb-4">You don't have any investments yet.</p>
+                            <p className="text-gray-500 dark:text-gray-400 mb-4">You don&apos;t have any investments yet.</p>
                             <Link
                                 href="/"
                                 className="inline-block px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-purple-700"

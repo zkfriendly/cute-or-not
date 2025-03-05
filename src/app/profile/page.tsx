@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { mockUser, mockTrades } from '../../data/mockData';
-import { Trade } from '../../types';
 
 export default function ProfilePage() {
-    const [user, setUser] = useState(mockUser);
+    const [user] = useState(mockUser);
     const [activeTab, setActiveTab] = useState<'trades' | 'portfolio'>('trades');
 
     const userTrades = mockTrades.filter(trade => trade.userId === user.id);
@@ -45,8 +44,8 @@ export default function ProfilePage() {
                     <nav className="flex">
                         <button
                             className={`px-6 py-4 text-sm font-medium border-b-2 ${activeTab === 'trades'
-                                    ? 'border-pink-500 text-pink-600 dark:text-pink-400'
-                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                ? 'border-pink-500 text-pink-600 dark:text-pink-400'
+                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}
                             onClick={() => setActiveTab('trades')}
                         >
@@ -54,8 +53,8 @@ export default function ProfilePage() {
                         </button>
                         <button
                             className={`px-6 py-4 text-sm font-medium border-b-2 ${activeTab === 'portfolio'
-                                    ? 'border-pink-500 text-pink-600 dark:text-pink-400'
-                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                ? 'border-pink-500 text-pink-600 dark:text-pink-400'
+                                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}
                             onClick={() => setActiveTab('portfolio')}
                         >
@@ -70,7 +69,7 @@ export default function ProfilePage() {
                             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Your Recent Trades</h2>
 
                             {userTrades.length === 0 ? (
-                                <p className="text-gray-500 dark:text-gray-400 text-center py-8">You haven't made any trades yet.</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-center py-8">You haven&apos;t made any trades yet.</p>
                             ) : (
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
@@ -89,8 +88,8 @@ export default function ProfilePage() {
                                                     <td className="py-3 text-gray-800 dark:text-gray-200">{trade.memeId}</td>
                                                     <td className="py-3">
                                                         <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${trade.type === 'CUTE'
-                                                                ? 'bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200'
-                                                                : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                                                            ? 'bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200'
+                                                            : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
                                                             }`}>
                                                             {trade.type}
                                                         </span>

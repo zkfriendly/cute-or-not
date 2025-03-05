@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { mockUser } from '../data/mockData';
 
 export default function Header() {
-    const [user, setUser] = useState(mockUser);
+    const [user] = useState(mockUser);
 
     return (
         <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-md">

@@ -10,7 +10,7 @@ export default function TrendingPage() {
     const [sortBy, setSortBy] = useState<'popular' | 'recent' | 'price'>('popular');
 
     useEffect(() => {
-        let sortedMemes = [...mockMemes];
+        const sortedMemes = [...mockMemes];
 
         if (sortBy === 'popular') {
             sortedMemes.sort((a, b) => (b.cuteVotes + b.notCuteVotes) - (a.cuteVotes + a.notCuteVotes));
@@ -31,8 +31,8 @@ export default function TrendingPage() {
                 <div className="flex space-x-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
                     <button
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${sortBy === 'popular'
-                                ? 'bg-white dark:bg-gray-700 shadow-sm'
-                                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                             }`}
                         onClick={() => setSortBy('popular')}
                     >
@@ -40,8 +40,8 @@ export default function TrendingPage() {
                     </button>
                     <button
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${sortBy === 'recent'
-                                ? 'bg-white dark:bg-gray-700 shadow-sm'
-                                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                             }`}
                         onClick={() => setSortBy('recent')}
                     >
@@ -49,8 +49,8 @@ export default function TrendingPage() {
                     </button>
                     <button
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${sortBy === 'price'
-                                ? 'bg-white dark:bg-gray-700 shadow-sm'
-                                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                             }`}
                         onClick={() => setSortBy('price')}
                     >

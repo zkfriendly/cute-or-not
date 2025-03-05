@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { mockMemes } from '../../../data/mockData';
@@ -9,19 +9,20 @@ import TradingPanel from '../../../components/TradingPanel';
 import RecentTrades from '../../../components/RecentTrades';
 
 interface MemeDetailPageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export default function MemeDetailPage({ params }: MemeDetailPageProps) {
+    const { id } = use(params);
     const [meme, setMeme] = useState<Meme | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Mock API call to fetch meme details
         const fetchMeme = () => {
-            const foundMeme = mockMemes.find(m => m.id === params.id);
+            const foundMeme = mockMemes.find(m => m.id === id);
 
             if (foundMeme) {
                 setMeme(foundMeme);
@@ -31,7 +32,7 @@ export default function MemeDetailPage({ params }: MemeDetailPageProps) {
         };
 
         fetchMeme();
-    }, [params.id]);
+    }, [id]);
 
     if (loading) {
         return (

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { mockUser } from '../data/mockData';
 
 export default function CreateMemeForm() {
     const router = useRouter();

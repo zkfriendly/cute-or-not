@@ -47,7 +47,7 @@ export default function Home() {
           <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-sm">
             <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center text-pink-600 dark:text-pink-300 text-xl font-bold mx-auto mb-4">2</div>
             <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Vote & Trade</h3>
-            <p className="text-gray-600 dark:text-gray-300">Decide if it's CUTE or NOT CUTE and buy tokens</p>
+            <p className="text-gray-600 dark:text-gray-300">Decide if it&apos;s CUTE or NOT CUTE and buy tokens</p>
           </div>
           <div className="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-sm">
             <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center text-pink-600 dark:text-pink-300 text-xl font-bold mx-auto mb-4">3</div>
