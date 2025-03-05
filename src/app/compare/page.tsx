@@ -124,7 +124,7 @@ export default function ComparePage() {
             <section className="text-center py-8 px-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl text-white">
                 <h1 className="text-3xl font-bold mb-2">Meme Battle</h1>
                 <p className="text-lg max-w-2xl mx-auto">
-                    Choose which meme you think is better, or select neither if you can't decide!
+                    Choose which meme you think is better, or select neither if you can&apos;t decide!
                 </p>
                 <div className="flex justify-center mt-4">
                     <Link
@@ -200,7 +200,7 @@ export default function ComparePage() {
                     onClick={() => handleChoice('neither')}
                     className="px-6 py-2 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-full hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
                 >
-                    Neither / Can't Decide
+                    Neither / Can&apos;t Decide
                 </button>
             </div>
 

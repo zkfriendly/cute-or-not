@@ -21,7 +21,7 @@ export default function RankingsPage() {
         }));
 
         sortMemes(memes, sortBy, sortOrder);
-    }, []);
+    }, [sortBy, sortOrder]);
 
     const sortMemes = (memes: Array<Meme & { score: number }>, by: string, order: 'asc' | 'desc') => {
         const sorted = [...memes].sort((a, b) => {
