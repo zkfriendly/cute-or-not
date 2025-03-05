@@ -24,17 +24,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 text-white`}
       >
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1 container mx-auto px-4 py-8">
             {children}
           </main>
-          <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-6">
-            <div className="container mx-auto px-4 text-center text-sm text-gray-600 dark:text-gray-400">
+          <footer className="bg-gray-900 border-t border-gray-800 py-6">
+            <div className="container mx-auto px-4 text-center text-sm text-gray-400">
               <p>© 2024 Cute or Not. All rights reserved.</p>
               <p className="mt-2">A memecoin trading platform for cute things.</p>
             </div>
