@@ -18,6 +18,23 @@ export default function MemeComparison() {
     const [streak, setStreak] = useState(0);
     const [showEmoji, setShowEmoji] = useState<{ emoji: string, side: 'left' | 'right' | null }>({ emoji: '', side: null });
 
+    // Gamification elements
+    const [points, setPoints] = useState(0);
+    const [level, setLevel] = useState(1);
+    const [xp, setXp] = useState(0);
+    const [xpToNextLevel, setXpToNextLevel] = useState(100);
+    const [showLevelUp, setShowLevelUp] = useState(false);
+    const [achievements, setAchievements] = useState<{ id: string, name: string, unlocked: boolean, icon: string }[]>([
+        { id: 'first_vote', name: 'First Vote!', unlocked: false, icon: '🎮' },
+        { id: 'streak_5', name: 'On Fire!', unlocked: false, icon: '🔥' },
+        { id: 'streak_10', name: 'Unstoppable!', unlocked: false, icon: '⚡' },
+        { id: 'vote_25', name: 'Opinion Leader', unlocked: false, icon: '🏅' },
+        { id: 'vote_50', name: 'Meme Expert', unlocked: false, icon: '🧠' },
+        { id: 'vote_100', name: 'Meme Legend', unlocked: false, icon: '👑' },
+    ]);
+    const [showAchievement, setShowAchievement] = useState<{ name: string, icon: string } | null>(null);
+    const [comboMultiplier, setComboMultiplier] = useState(1);
+
     // Initialize memes and rankings
     useEffect(() => {
         // Clone the memes to avoid modifying the original data
@@ -85,6 +102,75 @@ export default function MemeComparison() {
         setRankings(newRankings);
     };
 
+    // Check and unlock achievements
+    const checkAchievements = () => {
+        const newAchievements = [...achievements];
+        let achievementUnlocked = null;
+
+        // First vote achievement
+        if (history.length === 1 && !newAchievements[0].unlocked) {
+            newAchievements[0].unlocked = true;
+            achievementUnlocked = { name: newAchievements[0].name, icon: newAchievements[0].icon };
+        }
+
+        // Streak achievements
+        if (streak === 5 && !newAchievements[1].unlocked) {
+            newAchievements[1].unlocked = true;
+            achievementUnlocked = { name: newAchievements[1].name, icon: newAchievements[1].icon };
+        }
+
+        if (streak === 10 && !newAchievements[2].unlocked) {
+            newAchievements[2].unlocked = true;
+            achievementUnlocked = { name: newAchievements[2].name, icon: newAchievements[2].icon };
+        }
+
+        // Vote count achievements
+        if (history.length === 25 && !newAchievements[3].unlocked) {
+            newAchievements[3].unlocked = true;
+            achievementUnlocked = { name: newAchievements[3].name, icon: newAchievements[3].icon };
+        }
+
+        if (history.length === 50 && !newAchievements[4].unlocked) {
+            newAchievements[4].unlocked = true;
+            achievementUnlocked = { name: newAchievements[4].name, icon: newAchievements[4].icon };
+        }
+
+        if (history.length === 100 && !newAchievements[5].unlocked) {
+            newAchievements[5].unlocked = true;
+            achievementUnlocked = { name: newAchievements[5].name, icon: newAchievements[5].icon };
+        }
+
+        if (achievementUnlocked) {
+            setShowAchievement(achievementUnlocked);
+            setTimeout(() => setShowAchievement(null), 3000);
+        }
+
+        setAchievements(newAchievements);
+    };
+
+    // Update level based on XP
+    const updateLevel = (newXp: number) => {
+        const currentXp = xp + newXp;
+        setXp(currentXp);
+
+        if (currentXp >= xpToNextLevel) {
+            const newLevel = level + 1;
+            const xpRemaining = currentXp - xpToNextLevel;
+            const newXpToNextLevel = Math.floor(xpToNextLevel * 1.5);
+
+            setLevel(newLevel);
+            setXp(xpRemaining);
+            setXpToNextLevel(newXpToNextLevel);
+            setShowLevelUp(true);
+
+            // Show level up animation
+            setTimeout(() => setShowLevelUp(false), 3000);
+
+            // Add points bonus for leveling up
+            setPoints(points + 100 * newLevel);
+        }
+    };
+
     // Handle user choice
     const handleChoice = (choice: 'left' | 'right' | 'neither') => {
         if (!currentPair) return;
@@ -93,6 +179,10 @@ export default function MemeComparison() {
 
         // Update history
         setHistory([...history, { pair: currentPair, choice }]);
+
+        // Calculate point reward
+        let pointReward = choice !== 'neither' ? 10 * comboMultiplier : 2;
+        let xpReward = choice !== 'neither' ? 5 * comboMultiplier : 1;
 
         // Update rankings based on choice
         if (choice === 'left') {
@@ -111,19 +201,47 @@ export default function MemeComparison() {
         // Clear emoji after a delay
         setTimeout(() => setShowEmoji({ emoji: '', side: null }), 1000);
 
-        // Update streak
+        // Update streak and combo multiplier
         if (choice === lastChoice && choice !== 'neither') {
-            setStreak(streak + 1);
-            if ((streak + 1) % 5 === 0) {
+            const newStreak = streak + 1;
+            setStreak(newStreak);
+
+            // Increase multiplier every 3 streak
+            if (newStreak % 3 === 0) {
+                const newMultiplier = Math.min(comboMultiplier + 0.5, 5); // Cap at 5x
+                setComboMultiplier(newMultiplier);
+
+                // Extra points for increasing multiplier
+                pointReward += 15 * newMultiplier;
+                xpReward += 10;
+            }
+
+            if (newStreak % 5 === 0) {
                 // Show confetti every 5 streak
                 setShowConfetti(true);
                 setTimeout(() => setShowConfetti(false), 3000);
+
+                // Bonus points for 5 streak
+                pointReward += 25 * comboMultiplier;
+                xpReward += 15;
             }
         } else if (choice !== 'neither') {
             setStreak(1);
+            setComboMultiplier(1);
+        } else {
+            // Reset streak on skip
+            setStreak(0);
+            setComboMultiplier(1);
         }
 
         setLastChoice(choice);
+
+        // Add points and XP
+        setPoints(points + Math.round(pointReward));
+        updateLevel(xpReward);
+
+        // Check for achievements
+        checkAchievements();
 
         // Get next pair
         const nextPair = getNextPair();
@@ -168,7 +286,71 @@ export default function MemeComparison() {
                 </div>
             )}
 
+            {showLevelUp && (
+                <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+                    <motion.div
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 1.5, opacity: 0 }}
+                        className="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-4 rounded-xl shadow-lg flex flex-col items-center"
+                    >
+                        <div className="text-5xl mb-2">🎯</div>
+                        <div className="text-2xl font-bold text-white">LEVEL UP!</div>
+                        <div className="text-3xl font-bold text-white">Level {level} 🌟</div>
+                    </motion.div>
+                </div>
+            )}
+
+            {showAchievement && (
+                <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+                    <motion.div
+                        initial={{ y: 50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -50, opacity: 0 }}
+                        className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4 rounded-xl shadow-lg flex flex-col items-center"
+                    >
+                        <div className="text-4xl mb-2">{showAchievement.icon}</div>
+                        <div className="text-lg font-medium text-white">Achievement Unlocked!</div>
+                        <div className="text-xl font-bold text-white">{showAchievement.name}</div>
+                    </motion.div>
+                </div>
+            )}
+
             <div className="relative">
+                {/* Game Status Bar */}
+                <div className="bg-gray-800 rounded-xl p-3 mb-4 shadow-md">
+                    <div className="flex justify-between items-center mb-2">
+                        <div className="flex items-center gap-2">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md border border-blue-400">
+                                {level}
+                            </div>
+                            <div>
+                                <div className="text-xs text-gray-400">Level</div>
+                                <div className="text-sm font-semibold text-white">{level}</div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1">
+                                <span className="text-yellow-400 text-sm">⭐</span>
+                                <span className="text-white font-bold">{points.toLocaleString()}</span>
+                            </div>
+                            <div className="text-xs text-gray-400">Points</div>
+                        </div>
+                    </div>
+
+                    {/* XP Progress Bar */}
+                    <div className="w-full bg-gray-700 rounded-full h-3 mb-1">
+                        <div
+                            className="bg-gradient-to-r from-blue-500 to-blue-400 h-3 rounded-full transition-all duration-500 ease-out"
+                            style={{ width: `${(xp / xpToNextLevel) * 100}%` }}
+                        ></div>
+                    </div>
+                    <div className="flex justify-between items-center text-xs text-gray-400">
+                        <span>XP: {xp}/{xpToNextLevel}</span>
+                        <span>{Math.floor((xp / xpToNextLevel) * 100)}%</span>
+                    </div>
+                </div>
+
                 {/* Stats Bar */}
                 <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
                     <div className="bg-pink-500/10 dark:bg-pink-900/30 px-3 py-1 rounded-full flex items-center">
@@ -177,7 +359,9 @@ export default function MemeComparison() {
 
                     {streak > 1 && (
                         <div className="bg-yellow-500/10 dark:bg-yellow-900/30 px-3 py-1 rounded-full flex items-center animate-pulse">
-                            <span className="text-yellow-600 dark:text-yellow-400 font-medium text-sm">🔥 {streak} streak!</span>
+                            <span className="text-yellow-600 dark:text-yellow-400 font-medium text-sm">
+                                🔥 {streak} streak! {comboMultiplier > 1 ? `(${comboMultiplier}x)` : ''}
+                            </span>
                         </div>
                     )}
 
@@ -192,20 +376,20 @@ export default function MemeComparison() {
                             Which meme is cuter?
                         </h2>
 
-                        {/* VS Badge - Desktop (absolute positioned) */}
-                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none hidden sm:block">
-                            <motion.div
-                                key={`vs-desktop-${round}`}
-                                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-                                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                            >
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg border-2 border-gray-900">
-                                    VS
-                                </div>
-                            </motion.div>
-                        </div>
-
                         <div className="sm:grid sm:grid-cols-2 sm:gap-8 flex flex-col relative">
+                            {/* VS Badge - Desktop (absolute positioned) */}
+                            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none hidden sm:block">
+                                <motion.div
+                                    key={`vs-desktop-${round}`}
+                                    initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                                >
+                                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg border-2 border-gray-900">
+                                        VS
+                                    </div>
+                                </motion.div>
+                            </div>
+
                             <AnimatePresence mode="wait">
                                 {/* Left Meme */}
                                 <motion.div
@@ -252,7 +436,7 @@ export default function MemeComparison() {
                                         onClick={() => handleChoice('left')}
                                         className="mt-2 sm:mt-3 px-4 sm:px-6 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                                     >
-                                        This One! 👈
+                                        This One! 👈 {comboMultiplier > 1 && <span className="ml-1 text-xs">{comboMultiplier}x</span>}
                                     </motion.button>
                                 </motion.div>
                             </AnimatePresence>
@@ -316,7 +500,7 @@ export default function MemeComparison() {
                                         onClick={() => handleChoice('right')}
                                         className="mt-2 sm:mt-3 px-4 sm:px-6 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all text-sm sm:text-base"
                                     >
-                                        This One! 👉
+                                        This One! 👉 {comboMultiplier > 1 && <span className="ml-1 text-xs">{comboMultiplier}x</span>}
                                     </motion.button>
                                 </motion.div>
                             </AnimatePresence>
@@ -342,6 +526,22 @@ export default function MemeComparison() {
                             >
                                 Skip / Can't Decide 🤔
                             </motion.button>
+                        </div>
+
+                        {/* Achievements Section - Mobile Only */}
+                        <div className="mt-6 pt-4 border-t border-gray-800 sm:hidden">
+                            <h3 className="text-sm font-medium text-gray-300 mb-2">Recent Achievements</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {achievements.filter(a => a.unlocked).slice(0, 3).map(achievement => (
+                                    <div key={achievement.id} className="bg-gray-800 px-2 py-1 rounded-lg flex items-center gap-1">
+                                        <span>{achievement.icon}</span>
+                                        <span className="text-xs text-gray-300">{achievement.name}</span>
+                                    </div>
+                                ))}
+                                {achievements.filter(a => a.unlocked).length === 0 && (
+                                    <div className="text-xs text-gray-500 italic">No achievements yet. Keep voting!</div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -402,6 +602,27 @@ export default function MemeComparison() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {/* Achievements Section - Desktop */}
+            <div className="hidden sm:block bg-gray-900 rounded-xl shadow-md overflow-hidden">
+                <div className="p-3 border-b border-gray-800">
+                    <h2 className="text-lg font-bold text-white">Your Achievements</h2>
+                </div>
+                <div className="p-4 grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {achievements.map(achievement => (
+                        <div
+                            key={achievement.id}
+                            className={`p-3 rounded-lg flex items-center gap-2 ${achievement.unlocked ? 'bg-gradient-to-r from-purple-800/30 to-blue-800/30 text-white' : 'bg-gray-800/50 text-gray-500'}`}
+                        >
+                            <div className={`text-2xl ${achievement.unlocked ? '' : 'opacity-50'}`}>{achievement.icon}</div>
+                            <div>
+                                <div className="font-medium">{achievement.name}</div>
+                                <div className="text-xs">{achievement.unlocked ? 'Unlocked!' : 'Locked'}</div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
